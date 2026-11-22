@@ -1,0 +1,6 @@
+{
+  "name": "Lụa Vạn Phúc — Di sản Làng nghề Dệt lụa",
+  "description": "Cổng thông tin bảo tồn, giáo dục và quảng bá nghề dệt lụa truyền thống Vạn Phúc, Hà Đông.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
