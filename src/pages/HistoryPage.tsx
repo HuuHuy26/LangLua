@@ -19,12 +19,13 @@ export function HistoryPage() {
     setError('');
     try {
       const res = await heritageApi.listArticles();
-      setArticles(res);
+      const list = Array.isArray(res) ? res : [];
+      setArticles(list);
       const paramId = searchParams.get('id');
-      if (paramId && res.some((a) => a._id === paramId)) {
+      if (paramId && list.some((a) => a._id === paramId)) {
         setSelectedId(paramId);
-      } else if (res.length > 0) {
-        setSelectedId((prev) => prev || res[0]._id);
+      } else if (list.length > 0) {
+        setSelectedId((prev) => prev || list[0]._id);
       }
     } catch {
       setError(lang === 'vi' ? 'Không thể tải tư liệu lịch sử.' : 'Unable to load historical articles.');
@@ -37,7 +38,8 @@ export function HistoryPage() {
     void loadArticles();
   }, [loadArticles]);
 
-  const selected = articles.find((a) => a._id === selectedId) || articles[0];
+  const safeArticles = Array.isArray(articles) ? articles : [];
+  const selected = safeArticles.find((a) => a._id === selectedId) || safeArticles[0] || null;
 
   return (
     <div className="mx-auto max-w-[1200px] px-6 py-12 space-y-12">
@@ -70,7 +72,7 @@ export function HistoryPage() {
               {lang === 'vi' ? 'Mốc thời gian lịch sử' : 'Historical Eras'}
             </p>
             <div className="divide-y divide-[#DED6C8] border border-[#DED6C8] bg-white">
-              {articles.map((art, index) => {
+              {safeArticles.map((art, index) => {
                 const active = selected?._id === art._id;
                 return (
                   <button

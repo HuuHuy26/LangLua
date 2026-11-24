@@ -124,15 +124,15 @@ export function DiscoveryQuizPage() {
 
       {loading ? (
         <div className="h-72 animate-pulse bg-[#EFEAE1]" />
-      ) : questions.length === 0 ? (
+      ) : (Array.isArray(questions) ? questions : []).length === 0 ? (
         <div className="border border-[#DED6C8] bg-white p-8 text-center text-sm text-[#57534E]">
           {lang === 'vi' ? 'Chưa có câu hỏi trong chủ đề này.' : 'No questions found in this topic.'}
         </div>
       ) : (
         <div className="space-y-6">
-          {questions.map((q, qIdx) => {
+          {(Array.isArray(questions) ? questions : []).map((q, qIdx) => {
             const chosen = selectedAnswers[q._id];
-            const verified = result?.results.find((r) => r.id === q._id);
+            const verified = result?.results?.find((r) => r.id === q._id);
             const opts = lang === 'vi' ? q.options.vi : q.options.en;
 
             return (

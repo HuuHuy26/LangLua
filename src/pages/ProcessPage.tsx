@@ -18,8 +18,9 @@ export function ProcessPage() {
     setError('');
     try {
       const res = await heritageApi.listProcesses();
-      setSteps(res);
-      if (res.length > 0) setActiveStep(res[0].stepOrder);
+      const list = Array.isArray(res) ? res : [];
+      setSteps(list);
+      if (list.length > 0) setActiveStep(list[0].stepOrder);
     } catch {
       setError(lang === 'vi' ? 'Không thể tải quy trình dệt lụa.' : 'Unable to load weaving process steps.');
     } finally {
@@ -31,7 +32,8 @@ export function ProcessPage() {
     void loadSteps();
   }, [loadSteps]);
 
-  const current = steps.find((s) => s.stepOrder === activeStep) || steps[0];
+  const safeSteps = Array.isArray(steps) ? steps : [];
+  const current = safeSteps.find((s) => s.stepOrder === activeStep) || safeSteps[0] || null;
 
   return (
     <div className="mx-auto max-w-[1200px] px-6 py-12 space-y-16">
@@ -56,7 +58,7 @@ export function ProcessPage() {
       ) : (
         <div className="space-y-8">
           <div className="grid grid-cols-2 gap-2 sm:grid-cols-4 lg:grid-cols-7">
-            {steps.map((step) => {
+            {safeSteps.map((step) => {
               const isSelected = step.stepOrder === activeStep;
               return (
                 <button

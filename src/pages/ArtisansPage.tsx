@@ -50,7 +50,7 @@ export function ArtisansPage() {
         <div className="h-72 animate-pulse bg-[#EFEAE1]" />
       ) : (
         <div className="space-y-10">
-          {artisans.map((art, index) => (
+          {(Array.isArray(artisans) ? artisans : []).map((art, index) => (
             <article
               key={art._id}
               className="grid grid-cols-1 gap-8 border border-[#DED6C8] bg-white p-6 lg:grid-cols-12 lg:p-8 items-center"

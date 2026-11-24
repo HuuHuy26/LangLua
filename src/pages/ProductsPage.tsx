@@ -43,15 +43,16 @@ export function ProductsPage() {
     { key: 'dui', vi: 'Lụa Đũi', en: 'Đũi Raw Silk' },
   ];
 
+  const safeProducts = Array.isArray(products) ? products : [];
   const normalizedQuery = searchQuery.trim().toLowerCase();
   const visible = normalizedQuery
-    ? products.filter(
+    ? safeProducts.filter(
         (p) =>
           t(p.name).toLowerCase().includes(normalizedQuery) ||
           t(p.description).toLowerCase().includes(normalizedQuery) ||
           p.accessionCode.toLowerCase().includes(normalizedQuery)
       )
-    : products;
+    : safeProducts;
 
   return (
     <div className="mx-auto max-w-[1200px] px-6 py-12 space-y-10">

@@ -57,7 +57,7 @@ export function ChallengesPage() {
         <div className="h-72 animate-pulse bg-[#EFEAE1]" />
       ) : (
         <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
-          {challenges.map((ch, idx) => (
+          {(Array.isArray(challenges) ? challenges : []).map((ch, idx) => (
             <article key={ch._id} className="border border-[#DED6C8] bg-white p-6 lg:p-8 flex flex-col justify-between space-y-6">
               <div className="space-y-4">
                 <div className="flex flex-wrap items-center justify-between gap-2 border-b border-[#DED6C8] pb-3 text-xs">

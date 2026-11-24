@@ -19,12 +19,13 @@ export function StoriesPage() {
     setError('');
     try {
       const res = await heritageApi.listStories();
-      setStories(res);
+      const list = Array.isArray(res) ? res : [];
+      setStories(list);
       const paramId = searchParams.get('id');
-      if (paramId && res.some((s) => s._id === paramId)) {
+      if (paramId && list.some((s) => s._id === paramId)) {
         setActiveId(paramId);
-      } else if (res.length > 0) {
-        setActiveId((prev) => prev || res[0]._id);
+      } else if (list.length > 0) {
+        setActiveId((prev) => prev || list[0]._id);
       }
     } catch {
       setError(lang === 'vi' ? 'Không thể tải câu chuyện di sản.' : 'Unable to load heritage stories.');
@@ -37,7 +38,8 @@ export function StoriesPage() {
     void loadStories();
   }, [loadStories]);
 
-  const current = stories.find((s) => s._id === activeId) || stories[0];
+  const safeStories = Array.isArray(stories) ? stories : [];
+  const current = safeStories.find((s) => s._id === activeId) || safeStories[0] || null;
 
   return (
     <div className="mx-auto max-w-[1200px] px-6 py-12 space-y-12">
@@ -61,7 +63,7 @@ export function StoriesPage() {
               {lang === 'vi' ? 'Danh mục bài viết' : 'Collected Narratives'}
             </p>
             <div className="divide-y divide-[#DED6C8] border border-[#DED6C8] bg-white">
-              {stories.map((st) => {
+              {safeStories.map((st) => {
                 const isSelected = current?._id === st._id;
                 return (
                   <button

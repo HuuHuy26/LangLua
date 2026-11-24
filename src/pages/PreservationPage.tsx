@@ -32,7 +32,8 @@ export function PreservationPage() {
     void loadEvents();
   }, [loadEvents]);
 
-  const visibleEvents = filter === 'all' ? events : events.filter((e) => e.eventType === filter);
+  const safeEvents = Array.isArray(events) ? events : [];
+  const visibleEvents = filter === 'all' ? safeEvents : safeEvents.filter((e) => e.eventType === filter);
 
   const typeLabel = (type: PreservationEvent['eventType']) => {
     const map: Record<PreservationEvent['eventType'], { vi: string; en: string }> = {

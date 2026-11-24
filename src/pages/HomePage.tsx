@@ -33,11 +33,15 @@ export function HomePage() {
     void loadOverview();
   }, [loadOverview]);
 
-  const articles = data?.articles || [];
+  const articles = Array.isArray(data?.articles) ? data.articles : [];
   const currentLeadArticle = articles[activeArticleIndex] || articles[0];
-  const featuredArtisans = data?.artisans?.filter((a) => a.featured).slice(0, 3) || data?.artisans?.slice(0, 3) || [];
-  const upcomingEvents = data?.events?.slice(0, 4) || [];
-  const highlightProducts = data?.products?.slice(0, 3) || [];
+  const featuredArtisans = Array.isArray(data?.artisans)
+    ? (data.artisans.filter((a) => a.featured).slice(0, 3).length > 0
+        ? data.artisans.filter((a) => a.featured).slice(0, 3)
+        : data.artisans.slice(0, 3))
+    : [];
+  const upcomingEvents = Array.isArray(data?.events) ? data.events.slice(0, 4) : [];
+  const highlightProducts = Array.isArray(data?.products) ? data.products.slice(0, 3) : [];
 
   // Helper to map exact Google Form links as required
   const getEventFormUrl = (titleVi: string, eventId: string, customUrl?: string) => {
