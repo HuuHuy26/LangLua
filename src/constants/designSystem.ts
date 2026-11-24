@@ -49,8 +49,8 @@ export const DESIGN_TOKENS = {
     },
   },
   typography: {
-    display: '"Cormorant Garamond", Georgia, serif',
-    sans: '"Plus Jakarta Sans", system-ui, -apple-system, sans-serif',
+    display: '"Times New Roman", Times, serif',
+    sans: '"Times New Roman", Times, serif',
     mono: '"JetBrains Mono", ui-monospace, monospace',
   },
   radius: {

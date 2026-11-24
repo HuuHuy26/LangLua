@@ -1,8 +1,9 @@
 @import "tailwindcss";
 
 @theme {
-  --font-display: "Times New Roman", Times, Georgia, serif;
-  --font-sans: "Times New Roman", Times, Georgia, serif;
+  --font-serif: "Times New Roman", Times, serif;
+  --font-display: "Times New Roman", Times, serif;
+  --font-sans: "Times New Roman", Times, serif;
   --font-mono: "JetBrains Mono", ui-monospace, monospace;
 
   /* Radiant Contemporary Silk Palette - Bắt Mắt & Sang Trọng */
@@ -34,23 +35,31 @@
 }
 
 @layer base {
+  *, ::before, ::after {
+    font-family: "Times New Roman", Times, serif;
+  }
+
+  .font-mono, code, pre, kbd, samp {
+    font-family: "JetBrains Mono", ui-monospace, monospace !important;
+  }
+
   html {
     background-color: var(--color-canvas-subtle);
     color: var(--color-ink);
-    font-family: var(--font-sans);
+    font-family: "Times New Roman", Times, serif;
     font-size: 16px;
     line-height: 1.7;
-    letter-spacing: 0.01em;
-    word-spacing: 0.02em;
+    letter-spacing: normal;
+    word-spacing: normal;
     scroll-behavior: smooth;
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
   }
 
   h1, h2, h3, h4, .font-serif {
-    font-family: var(--font-display);
+    font-family: "Times New Roman", Times, serif;
     text-wrap: balance;
-    letter-spacing: -0.01em;
+    letter-spacing: normal;
     line-height: 1.2;
   }
 
@@ -60,7 +69,7 @@
 
   p {
     line-height: 1.75;
-    letter-spacing: 0.015em;
+    letter-spacing: normal;
   }
 
   ::selection {

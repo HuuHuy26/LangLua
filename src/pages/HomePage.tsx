@@ -80,7 +80,7 @@ export function HomePage() {
                 </span>
               </div>
 
-              <h1 className="font-serif text-4xl sm:text-5xl lg:text-[3.8rem] font-TimeNewRoman leading-[1.08] tracking-tight text-[#0F172A]">
+              <h1 className="font-serif text-4xl sm:text-5xl lg:text-[3.8rem] font-bold leading-[1.08] text-[#0F172A]">
                 {lang === 'vi' ? (
                   <>
                     Hành trình giữ lửa Làng {' '}

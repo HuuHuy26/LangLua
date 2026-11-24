@@ -76,7 +76,7 @@ export function PreservationPage() {
           </span>
         </div>
 
-        <h1 className="font-serif text-4xl lg:text-5xl font-bold tracking-tight text-[#0F172A]">
+        <h1 className="font-serif text-4xl lg:text-5xl font-bold text-[#0F172A]">
           {lang === 'vi' ? 'Hoạt động & Workshop Bảo tồn Di sản' : 'Preservation Workshops & Events'}
         </h1>
         <p className="max-w-2xl text-base leading-relaxed text-[#334155]">
