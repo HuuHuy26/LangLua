@@ -131,6 +131,7 @@ export interface PreservationEvent {
   capacity: number;
   registeredCount: number;
   description: LocalizedText;
+  formUrl?: string;
   registrations?: EventRegistration[];
 }
 

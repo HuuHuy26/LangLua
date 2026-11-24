@@ -144,6 +144,7 @@ const EventSchema = new Schema(
     registeredCount: { type: Number, default: 0, min: 0 },
     description: { type: LocalizedTextSchema, required: true },
     registrations: { type: [EventRegistrationSchema], default: [] },
+    formUrl: { type: String, default: '' },
   },
   { timestamps: true }
 );

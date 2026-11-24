@@ -1,51 +1,217 @@
 @import "tailwindcss";
 
 @theme {
-  --font-display: "Cormorant Garamond", Georgia, serif;
-  --font-sans: "Plus Jakarta Sans", system-ui, -apple-system, sans-serif;
+  --font-display: "Times New Roman", Times, Georgia, serif;
+  --font-sans: "Times New Roman", Times, Georgia, serif;
   --font-mono: "JetBrains Mono", ui-monospace, monospace;
 
-  --color-canvas: #FBF9F5;
-  --color-surface: #EFEAE1;
-  --color-ink: #1C1917;
-  --color-muted: #57534E;
-  --color-hairline: #DED6C8;
-  --color-crimson: #9B231D;
-  --color-crimson-hover: #7E1B16;
-  --color-bronze: #8C6239;
+  /* Radiant Contemporary Silk Palette - Bắt Mắt & Sang Trọng */
+  --color-canvas: #FFFFFF;
+  --color-canvas-subtle: #F8FAFC;
+  --color-surface: #FFFFFF;
+  --color-surface-hover: #F1F5F9;
+  
+  --color-ink: #0F172A;
+  --color-ink-secondary: #334155;
+  --color-muted: #64748B;
+  --color-hairline: #E2E8F0;
+  --color-hairline-strong: #CBD5E1;
+
+  /* Eye-Catching Vibrant Accents */
+  --color-crimson: #E11D48; /* Vibrant Silk Ruby */
+  --color-crimson-hover: #BE123C;
+  --color-crimson-light: #FFF1F2;
+  
+  --color-gold: #F59E0B; /* Radiant Silk Amber Gold */
+  --color-gold-hover: #D97706;
+  --color-gold-light: #FFFBEB;
+  
+  --color-sapphire: #2563EB; /* Imperial Royal Blue */
+  --color-sapphire-light: #EFF6FF;
+  
+  --color-jade: #059669; /* Vivid Emerald */
+  --color-jade-light: #ECFDF5;
 }
 
 @layer base {
   html {
-    background-color: #FBF9F5;
-    color: #1C1917;
-    font-family: "Plus Jakarta Sans", system-ui, sans-serif;
+    background-color: var(--color-canvas-subtle);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-size: 16px;
+    line-height: 1.7;
+    letter-spacing: 0.01em;
+    word-spacing: 0.02em;
     scroll-behavior: smooth;
     -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
   }
 
-  h1, h2, h3, h4 {
-    font-family: "Cormorant Garamond", Georgia, serif;
+  h1, h2, h3, h4, .font-serif {
+    font-family: var(--font-display);
     text-wrap: balance;
+    letter-spacing: -0.01em;
+    line-height: 1.2;
+  }
+
+  h1 { line-height: 1.1; }
+  h2 { line-height: 1.15; }
+  h3, h4 { line-height: 1.25; }
+
+  p {
+    line-height: 1.75;
+    letter-spacing: 0.015em;
+  }
+
+  ::selection {
+    background-color: #E11D48;
+    color: #FFFFFF;
   }
 }
 
+/* Radiant Silk Aurora Mesh Pattern - Tươi sáng, bắt mắt */
+.bg-silk-pattern {
+  background-color: #FAFAFA;
+  background-image: 
+    radial-gradient(at 10% 10%, rgba(225, 29, 72, 0.08) 0px, transparent 50%),
+    radial-gradient(at 90% 10%, rgba(245, 158, 11, 0.12) 0px, transparent 50%),
+    radial-gradient(at 50% 50%, rgba(37, 99, 235, 0.06) 0px, transparent 60%),
+    radial-gradient(at 80% 90%, rgba(225, 29, 72, 0.09) 0px, transparent 50%),
+    radial-gradient(at 20% 90%, rgba(16, 185, 129, 0.08) 0px, transparent 50%);
+}
+
+.bg-hero-glow {
+  background: radial-gradient(circle at 50% 20%, rgba(245, 158, 11, 0.15) 0%, rgba(225, 29, 72, 0.1) 40%, transparent 70%);
+}
+
+/* Glassmorphism with Radiant Border & 3D Shadow */
+.silk-card {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(226, 232, 240, 0.9);
+  box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.05), 0 2px 6px -1px rgba(15, 23, 42, 0.03);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.silk-card:hover {
+  border-color: rgba(245, 158, 11, 0.6);
+  box-shadow: 0 20px 35px -5px rgba(225, 29, 72, 0.12), 0 10px 20px -5px rgba(245, 158, 11, 0.1);
+  transform: translateY(-3px);
+}
+
+/* Silk Button Signatures - Rực rỡ & Cuốn hút */
+.silk-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: 0.875rem;
+  background: linear-gradient(135deg, #E11D48 0%, #BE123C 50%, #9F1239 100%);
+  color: #FFFFFF;
+  font-weight: 600;
+  font-size: 0.875rem;
+  padding: 0.75rem 1.5rem;
+  box-shadow: 0 4px 14px 0 rgba(225, 29, 72, 0.39);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.silk-btn-primary:hover {
+  background: linear-gradient(135deg, #F43F5E 0%, #E11D48 50%, #BE123C 100%);
+  box-shadow: 0 6px 20px 0 rgba(225, 29, 72, 0.5);
+  transform: translateY(-2px) scale(1.02);
+}
+
+.silk-btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: 0.875rem;
+  background: #FFFFFF;
+  color: #0F172A;
+  font-weight: 600;
+  font-size: 0.875rem;
+  padding: 0.75rem 1.5rem;
+  border: 1px solid #CBD5E1;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.silk-btn-secondary:hover {
+  background: #F8FAFC;
+  border-color: #F59E0B;
+  color: #BE123C;
+  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.15);
+  transform: translateY(-2px);
+}
+
+/* Badges & Tags - Sắc nét & Nổi bật */
+.silk-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.3rem 0.75rem;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  border-radius: 9999px;
+  background-color: #FFFBEB;
+  color: #B45309;
+  border: 1px solid rgba(245, 158, 11, 0.4);
+  box-shadow: 0 1px 3px rgba(245, 158, 11, 0.08);
+}
+
+.silk-badge-crimson {
+  background-color: #FFF1F2;
+  color: #BE123C;
+  border-color: rgba(225, 29, 72, 0.35);
+  box-shadow: 0 1px 3px rgba(225, 29, 72, 0.08);
+}
+
+.silk-badge-gold {
+  background: linear-gradient(135deg, #FFFBEB 0%, #FEF3C7 100%);
+  color: #92400E;
+  border: 1px solid rgba(245, 158, 11, 0.5);
+  box-shadow: 0 2px 6px rgba(245, 158, 11, 0.15);
+}
+
+.silk-badge-sapphire {
+  background-color: #EFF6FF;
+  color: #1D4ED8;
+  border-color: rgba(37, 99, 235, 0.35);
+}
+
+.silk-badge-jade {
+  background-color: #ECFDF5;
+  color: #047857;
+  border-color: rgba(5, 150, 105, 0.35);
+}
+
+/* Museum Framing with Golden Glow */
+.silk-frame {
+  position: relative;
+  border-radius: 1.25rem;
+  border: 2px solid rgba(245, 158, 11, 0.4);
+  padding: 0.5rem;
+  background: #FFFFFF;
+  box-shadow: 0 10px 30px -5px rgba(245, 158, 11, 0.2);
+}
+
+/* Tabular & Typography Utilities */
 .tabular-nums {
   font-variant-numeric: tabular-nums;
 }
 
-.editorial-prose {
-  max-width: 68ch;
-  line-height: 1.8;
-}
-
 .editorial-dropcap::first-letter {
-  font-family: "Cormorant Garamond", Georgia, serif;
-  font-size: 3.4rem;
-  font-weight: 600;
+  font-family: var(--font-display);
+  font-size: 3.8rem;
+  font-weight: 700;
   float: left;
-  line-height: 0.85;
-  margin-right: 0.65rem;
-  margin-top: 0.25rem;
-  color: #9B231D;
+  line-height: 0.82;
+  margin-right: 0.75rem;
+  margin-top: 0.2rem;
+  color: #E11D48;
 }

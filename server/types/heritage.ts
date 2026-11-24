@@ -137,6 +137,7 @@ export interface EventEntity {
   capacity: number;
   registeredCount: number;
   description: LocalizedText;
+  formUrl?: string;
   registrations: EventRegistration[];
 }
 
