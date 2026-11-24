@@ -1,10 +1,10 @@
-import { CalendarCheck, ExternalLink, MapPin, Sparkles } from 'lucide-react';
+import { CalendarCheck, ExternalLink, MapPin, Sparkles, CheckCircle2, Settings2 } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
 import { QueryErrorBanner } from '../components/common/QueryErrorBanner';
 import { useLanguage } from '../context/LanguageContext';
 import { heritageApi } from '../services/api';
+import { eventRegistrationService } from '../services/eventRegistrationService';
 import type { PreservationEvent } from '../types';
-
 
 export function PreservationPage() {
   const { lang, t } = useLanguage();
@@ -12,6 +12,16 @@ export function PreservationPage() {
   const [filter, setFilter] = useState<'all' | PreservationEvent['eventType']>('all');
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState('');
+
+  // Real-time registration sync state
+  const [liveCount, setLiveCount] = useState<number>(0);
+  const [confirmPending, setConfirmPending] = useState<boolean>(false);
+  const [justRegistered, setJustRegistered] = useState<boolean>(false);
+
+  // Google Sheet auto-sync config toggle
+  const [showSheetConfig, setShowSheetConfig] = useState<boolean>(false);
+  const [sheetInput, setSheetInput] = useState<string>(() => eventRegistrationService.getGoogleSheetUrl());
+  const [sheetSaveMsg, setSheetSaveMsg] = useState<string>('');
 
   const loadEvents = useCallback(async () => {
     setLoading(true);
@@ -31,6 +41,32 @@ export function PreservationPage() {
   useEffect(() => {
     void loadEvents();
   }, [loadEvents]);
+
+  useEffect(() => {
+    void eventRegistrationService.getCount().then(setLiveCount);
+
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      if (params.get('registered') === 'true' || params.get('registered') === '1') {
+        const updated = eventRegistrationService.recordRegistration();
+        setLiveCount(updated);
+        setJustRegistered(true);
+        const url = new URL(window.location.href);
+        url.searchParams.delete('registered');
+        window.history.replaceState({}, '', url.toString());
+      }
+
+      const sync = () => {
+        void eventRegistrationService.getCount().then(setLiveCount);
+      };
+      window.addEventListener('workshop-registered-updated', sync);
+      window.addEventListener('storage', sync);
+      return () => {
+        window.removeEventListener('workshop-registered-updated', sync);
+        window.removeEventListener('storage', sync);
+      };
+    }
+  }, []);
 
   const safeEvents = Array.isArray(events) ? events : [];
   const visibleEvents = filter === 'all' ? safeEvents : safeEvents.filter((e) => e.eventType === filter);
@@ -122,7 +158,8 @@ export function PreservationPage() {
       ) : (
         <div className={`grid grid-cols-1 ${visibleEvents.length === 1 ? 'max-w-2xl mx-auto' : 'md:grid-cols-2'} gap-8`}>
           {visibleEvents.map((evt) => {
-            const remaining = Math.max(0, evt.capacity - evt.registeredCount);
+            const currentCount = Math.max(liveCount, evt.registeredCount);
+            const remaining = Math.max(0, evt.capacity - currentCount);
             const isFull = remaining === 0;
             const formUrl = getEventFormUrl(evt);
 
@@ -155,10 +192,56 @@ export function PreservationPage() {
                   </p>
                 </div>
 
+                {/* Interactive Confirmation & Celebration state */}
+                {confirmPending && !justRegistered && (
+                  <div className="rounded-2xl border border-amber-300 bg-amber-50/95 p-4 text-xs text-amber-900 space-y-3 animate-in fade-in">
+                    <p className="font-semibold flex items-center gap-1.5">
+                      <span>📝</span>
+                      <span>
+                        {lang === 'vi'
+                          ? 'Biểu mẫu đã mở ở tab mới. Sau khi bạn gửi form xong, hãy nhấn nút dưới đây để cập nhật số lượng ngay:'
+                          : 'Form opened in a new tab. After submitting Google Form, please confirm here:'}
+                      </span>
+                    </p>
+                    <div className="flex items-center gap-2">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const newCount = eventRegistrationService.recordRegistration();
+                          setLiveCount(newCount);
+                          setJustRegistered(true);
+                          setConfirmPending(false);
+                        }}
+                        className="rounded-xl bg-[#E11D48] text-white px-4 py-2 font-bold hover:bg-[#BE123C] transition-colors shadow-xs"
+                      >
+                        {lang === 'vi' ? '✓ Tôi đã gửi biểu mẫu' : '✓ I have submitted the form'}
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setConfirmPending(false)}
+                        className="text-slate-500 hover:text-slate-700 px-2 py-1"
+                      >
+                        {lang === 'vi' ? 'Đóng' : 'Close'}
+                      </button>
+                    </div>
+                  </div>
+                )}
+
+                {justRegistered && (
+                  <div className="rounded-2xl border border-emerald-300 bg-emerald-50 p-3.5 text-xs text-emerald-800 font-semibold flex items-center gap-2">
+                    <CheckCircle2 className="h-4 w-4 text-emerald-600 shrink-0" />
+                    <span>
+                      {lang === 'vi'
+                        ? '🎉 Đã ghi nhận đăng ký của bạn! Số lượng người tham gia đã được tự động cập nhật.'
+                        : '🎉 Registration confirmed! Participant count updated automatically.'}
+                    </span>
+                  </div>
+                )}
+
                 <div className="flex flex-wrap items-center justify-between gap-4 border-t border-[#E2D9CC] pt-4">
                   <div className="text-xs text-[#6B645A] tabular-nums">
                     <span className="font-mono font-bold text-[#181512]">
-                      {evt.registeredCount}/{evt.capacity}
+                      {currentCount}/{evt.capacity}
                     </span>{' '}
                     <span className={isFull ? 'text-red-700 font-semibold' : 'text-emerald-700 font-semibold'}>
                       {isFull
@@ -172,6 +255,7 @@ export function PreservationPage() {
                     href={formUrl}
                     target="_blank"
                     rel="noopener noreferrer"
+                    onClick={() => setConfirmPending(true)}
                     className="silk-btn-primary text-sm py-2.5 px-5 shadow-xs whitespace-nowrap shrink-0"
                   >
                     <CalendarCheck className="h-4 w-4 text-[#FDE68A]" />
@@ -184,6 +268,60 @@ export function PreservationPage() {
           })}
         </div>
       )}
+
+      {/* Optional Google Sheet live sync configuration */}
+      <div className="pt-4 border-t border-[#E2D9CC] flex flex-col items-center">
+        <button
+          type="button"
+          onClick={() => setShowSheetConfig((prev) => !prev)}
+          className="text-xs font-semibold text-[#8C6239] hover:underline inline-flex items-center gap-1.5 opacity-80 hover:opacity-100"
+        >
+          <Settings2 className="h-3.5 w-3.5" />
+          <span>
+            {lang === 'vi'
+              ? 'Tùy chọn: Tự động đồng bộ số lượng từ Google Sheets'
+              : 'Optional: Auto-sync participant count from Google Sheets'}
+          </span>
+        </button>
+
+        {showSheetConfig && (
+          <div className="mt-4 w-full max-w-xl rounded-2xl border border-[#DED6C8] bg-white p-5 space-y-3 text-xs text-[#1C1917] shadow-sm animate-in fade-in">
+            <h4 className="font-bold text-[#8C6239] text-sm">
+              {lang === 'vi' ? 'Đồng bộ tự động từ Google Sheets' : 'Sync directly from Google Sheets'}
+            </h4>
+            <p className="text-slate-600 leading-relaxed">
+              {lang === 'vi'
+                ? 'Mở Google Sheet liên kết với Google Form của bạn > Nhấn "Chia sẻ" > Chọn "Bất kỳ ai có liên kết đều có thể xem" (hoặc Xuất bản lên web dạng CSV) và dán link vào đây:'
+                : 'Open the Google Sheet linked to your Form > Click "Share" > "Anyone with the link can view" and paste the link below:'}
+            </p>
+            <div className="flex gap-2">
+              <input
+                type="text"
+                value={sheetInput}
+                onChange={(e) => setSheetInput(e.target.value)}
+                placeholder="https://docs.google.com/spreadsheets/d/.../edit"
+                className="flex-1 rounded-xl border border-slate-300 px-3 py-2 text-xs focus:border-[#E11D48] focus:outline-hidden"
+              />
+              <button
+                type="button"
+                onClick={async () => {
+                  eventRegistrationService.setGoogleSheetUrl(sheetInput);
+                  const count = await eventRegistrationService.getCount();
+                  setLiveCount(count);
+                  setSheetSaveMsg(lang === 'vi' ? `✓ Đã kết nối! Số phản hồi: ${count}` : `✓ Connected! Responses: ${count}`);
+                  setTimeout(() => setSheetSaveMsg(''), 4000);
+                }}
+                className="silk-btn-primary py-2 px-3.5 text-xs whitespace-nowrap"
+              >
+                {lang === 'vi' ? 'Lưu & Đồng bộ' : 'Save & Sync'}
+              </button>
+            </div>
+            {sheetSaveMsg && (
+              <p className="text-emerald-700 font-bold">{sheetSaveMsg}</p>
+            )}
+          </div>
+        )}
+      </div>
     </div>
   );
 }

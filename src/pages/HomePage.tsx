@@ -1,4 +1,4 @@
-import { ArrowRight, Calendar, Compass, ExternalLink, Layers, Sparkles, Trophy, Users, ShieldCheck, BookmarkCheck } from 'lucide-react';
+import { ArrowRight, Calendar, Compass, ExternalLink, Layers, Sparkles, Trophy, Users, ShieldCheck, BookmarkCheck, CheckCircle2 } from 'lucide-react';
 import { motion } from 'motion/react';
 import { useCallback, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
@@ -7,6 +7,7 @@ import { QueryErrorBanner } from '../components/common/QueryErrorBanner';
 import { HERITAGE_IMAGES } from '../constants/assets';
 import { useLanguage } from '../context/LanguageContext';
 import { heritageApi } from '../services/api';
+import { eventRegistrationService } from '../services/eventRegistrationService';
 import type { OverviewPayload } from '../types';
 
 export function HomePage() {
@@ -15,6 +16,37 @@ export function HomePage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [activeArticleIndex, setActiveArticleIndex] = useState(0);
+
+  // Real-time registration sync state
+  const [liveCount, setLiveCount] = useState<number>(0);
+  const [confirmPending, setConfirmPending] = useState<boolean>(false);
+  const [justRegistered, setJustRegistered] = useState<boolean>(false);
+
+  useEffect(() => {
+    void eventRegistrationService.getCount().then(setLiveCount);
+
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      if (params.get('registered') === 'true' || params.get('registered') === '1') {
+        const updated = eventRegistrationService.recordRegistration();
+        setLiveCount(updated);
+        setJustRegistered(true);
+        const url = new URL(window.location.href);
+        url.searchParams.delete('registered');
+        window.history.replaceState({}, '', url.toString());
+      }
+
+      const sync = () => {
+        void eventRegistrationService.getCount().then(setLiveCount);
+      };
+      window.addEventListener('workshop-registered-updated', sync);
+      window.addEventListener('storage', sync);
+      return () => {
+        window.removeEventListener('workshop-registered-updated', sync);
+        window.removeEventListener('storage', sync);
+      };
+    }
+  }, []);
 
   const loadOverview = useCallback(async () => {
     setLoading(true);
@@ -561,7 +593,9 @@ export function HomePage() {
 
           <div className={`mt-8 grid grid-cols-1 ${upcomingEvents.length === 1 ? 'max-w-2xl mx-auto' : 'md:grid-cols-2'} gap-6`}>
             {upcomingEvents.map((evt) => {
-              const remaining = Math.max(0, evt.capacity - evt.registeredCount);
+              const currentCount = Math.max(liveCount, evt.registeredCount);
+              const remaining = Math.max(0, evt.capacity - currentCount);
+              const isFull = remaining === 0;
               const titleVi = evt.title?.vi || '';
               const formUrl = getEventFormUrl(titleVi, evt._id, evt.formUrl);
 
@@ -576,8 +610,12 @@ export function HomePage() {
                         <Calendar className="h-4 w-4 text-[#E11D48]" />
                         <span>{evt.startDate.slice(0, 10)}</span>
                       </div>
-                      <span className="rounded-full bg-emerald-50 px-3 py-0.5 text-[11px] font-bold text-emerald-800 border border-emerald-200 font-mono">
-                        {evt.registeredCount}/{evt.capacity} ({lang === 'vi' ? `Còn ${remaining} chỗ` : `${remaining} slots left`})
+                      <span className={`rounded-full px-3 py-0.5 text-[11px] font-bold border font-mono ${
+                        isFull
+                          ? 'bg-rose-50 text-rose-700 border-rose-200'
+                          : 'bg-emerald-50 text-emerald-800 border border-emerald-200'
+                      }`}>
+                        {currentCount}/{evt.capacity} ({lang === 'vi' ? (isFull ? 'Đã hết chỗ' : `Còn ${remaining} chỗ`) : (isFull ? 'Fully Booked' : `${remaining} slots left`)})
                       </span>
                     </div>
 
@@ -594,11 +632,58 @@ export function HomePage() {
                     </p>
                   </div>
 
+                  {/* Interactive Confirmation & Celebration state */}
+                  {confirmPending && !justRegistered && (
+                    <div className="rounded-2xl border border-amber-300 bg-amber-50/95 p-3.5 text-xs text-amber-900 space-y-2.5 animate-in fade-in">
+                      <p className="font-semibold flex items-center gap-1.5">
+                        <span>📝</span>
+                        <span>
+                          {lang === 'vi'
+                            ? 'Biểu mẫu đã mở ở tab mới. Sau khi bạn gửi form xong, hãy nhấn nút dưới đây để cập nhật số lượng ngay:'
+                            : 'Form opened in a new tab. After submitting Google Form, please confirm here:'}
+                        </span>
+                      </p>
+                      <div className="flex items-center gap-2">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const newCount = eventRegistrationService.recordRegistration();
+                            setLiveCount(newCount);
+                            setJustRegistered(true);
+                            setConfirmPending(false);
+                          }}
+                          className="rounded-xl bg-[#E11D48] text-white px-3.5 py-1.5 font-bold hover:bg-[#BE123C] transition-colors shadow-xs"
+                        >
+                          {lang === 'vi' ? '✓ Tôi đã gửi biểu mẫu' : '✓ I have submitted the form'}
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setConfirmPending(false)}
+                          className="text-slate-500 hover:text-slate-700 text-xs px-2 py-1"
+                        >
+                          {lang === 'vi' ? 'Đóng' : 'Close'}
+                        </button>
+                      </div>
+                    </div>
+                  )}
+
+                  {justRegistered && (
+                    <div className="rounded-2xl border border-emerald-300 bg-emerald-50 p-3 text-xs text-emerald-800 font-semibold flex items-center gap-2">
+                      <CheckCircle2 className="h-4 w-4 text-emerald-600 shrink-0" />
+                      <span>
+                        {lang === 'vi'
+                          ? '🎉 Đã ghi nhận đăng ký của bạn! Số lượng người tham gia đã được tự động cập nhật.'
+                          : '🎉 Registration confirmed! Participant count updated automatically.'}
+                      </span>
+                    </div>
+                  )}
+
                   <div className="pt-4 border-t border-slate-200 flex items-center justify-between gap-3">
                     <a
                       href={formUrl}
                       target="_blank"
                       rel="noopener noreferrer"
+                      onClick={() => setConfirmPending(true)}
                       className="silk-btn-primary text-xs py-2.5 px-4 shadow-xs whitespace-nowrap"
                     >
                       <Calendar className="h-3.5 w-3.5 text-[#FDE68A]" />

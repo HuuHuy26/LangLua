@@ -73,9 +73,8 @@ export function StoriesPage() {
                       setActiveId(st._id);
                       setSearchParams({ id: st._id });
                     }}
-                    className={`w-full p-4 text-left transition-colors ${
-                      isSelected ? 'bg-[#EFEAE1]' : 'hover:bg-[#FBF9F5]'
-                    }`}
+                    className={`w-full p-4 text-left transition-colors ${isSelected ? 'bg-[#EFEAE1]' : 'hover:bg-[#FBF9F5]'
+                      }`}
                   >
                     <p className="text-xs text-[#8C6239]">{st.narratorName}</p>
                     <p className={`mt-1 font-display text-lg font-semibold ${isSelected ? 'text-[#9B231D]' : 'text-[#1C1917]'}`}>

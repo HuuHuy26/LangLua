@@ -19,7 +19,7 @@ export function SiteFooter() {
                 </svg>
               </div>
               <div>
-                <p className="font-serif text-2xl font-TimeNewRoman tracking-tight text-white">Nối Nhịp Thoi Đưa</p>
+                <p className="font-serif text-2xl text-white">Làng Lụa Vạn Phúc</p>
                 <p className="text-[10px] uppercase tracking-widest font-bold text-[#FBBF24]">
                   {lang === 'vi' ? 'Hà Đông · 1.000 Năm Di Sản' : 'Hà Đông · 1,000-Year Heritage'}
                 </p>
