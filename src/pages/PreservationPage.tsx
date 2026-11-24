@@ -119,7 +119,7 @@ export function PreservationPage() {
           {lang === 'vi' ? 'Hiện chưa có hoạt động thuộc danh mục này.' : 'No activities found for this category.'}
         </div>
       ) : (
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
+        <div className={`grid grid-cols-1 ${visibleEvents.length === 1 ? 'max-w-2xl mx-auto' : 'md:grid-cols-2'} gap-8`}>
           {visibleEvents.map((evt) => {
             const remaining = Math.max(0, evt.capacity - evt.registeredCount);
             const isFull = remaining === 0;

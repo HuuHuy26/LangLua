@@ -993,69 +993,6 @@ export function createInitialSeedSnapshot(): LocalDatabaseSnapshot {
   ],
   "events": [
     {
-      "_id": "evt-1",
-      "title": {
-        "vi": "Workshop Cuối tuần: Tự tay ươm tơ & Dệt khung cửi mini cùng Nghệ nhân",
-        "en": "Weekend Workshop: Hand-Reeling Silk & Mini Loom Weaving"
-      },
-      "eventType": "workshop",
-      "startDate": "2026-12-06T09:00",
-      "location": {
-        "vi": "Nhà Bảo tồn Lụa cổ, Số 12 Phố Lụa, Vạn Phúc, Hà Đông",
-        "en": "Heritage Weaving Courtyard, 12 Silk Street, Vạn Phúc, Hà Đông"
-      },
-      "capacity": 30,
-      "registeredCount": 18,
-      "description": {
-        "vi": "Trải nghiệm thực tế 3 giờ dành cho học sinh, sinh viên và du khách: tìm hiểu vòng đời tằm dâu, thực hành rút tơ từ kén nước ấm và tự tay dệt một tấm lụa lưu niệm nhỏ.",
-        "en": "A 3-hour hands-on session for students and travelers: explore silkworm life cycles, reel raw silk from warm cocoons, and weave a keepsake silk bookmark."
-      },
-      "registrations": [],
-      "formUrl": "https://forms.gle/TMAKH7oR8gqmsbxF7"
-    },
-    {
-      "_id": "evt-2",
-      "title": {
-        "vi": "Triển lãm Chuyên đề: “Vân Lụa Ngàn Năm — Từ Tiến Vua Đến Thời Trang Trẻ”",
-        "en": "Curated Exhibition: “A Millennium of Vân Silk — Royal Heritage to Youth Design”"
-      },
-      "eventType": "exhibition",
-      "startDate": "2026-12-14T08:30",
-      "location": {
-        "vi": "Đình Vạn Phúc & Không gian Trưng bày Di sản Hà Đông",
-        "en": "Vạn Phúc Communal House & Heritage Gallery"
-      },
-      "capacity": 120,
-      "registeredCount": 74,
-      "description": {
-        "vi": "Trưng bày hơn 40 mẫu hoa văn lụa Vân cổ được phục dựng, bộ bìa đục lỗ Jacquard đầu thế kỷ XX và các thiết kế áo dài đương đại của sinh viên mỹ thuật.",
-        "en": "Showcasing 40+ revived antique Vân patterns, century-old jacquard punch-cards, and contemporary garments created by young design students."
-      },
-      "registrations": [],
-      "formUrl": "https://forms.gle/HnLdbN3Yn8FRtnFE6"
-    },
-    {
-      "_id": "evt-3",
-      "title": {
-        "vi": "Chiến dịch Thanh niên Số hóa Kho Hoa văn & Hướng dẫn Du lịch Xanh",
-        "en": "Youth Volunteer Drive: Digitizing Historic Motifs & Eco-Tours"
-      },
-      "eventType": "volunteer",
-      "startDate": "2026-12-20T08:00",
-      "location": {
-        "vi": "Trung tâm Sinh hoạt Cộng đồng Làng nghề Vạn Phúc",
-        "en": "Vạn Phúc Craft Village Community Hub"
-      },
-      "capacity": 45,
-      "registeredCount": 29,
-      "description": {
-        "vi": "Mời gọi sinh viên ngành thiết kế, công nghệ thông tin, ngoại ngữ tham gia ghi âm lời kể nghệ nhân, chụp ảnh lưu trữ hoa văn cổ và làm tình nguyện viên thuyết minh song ngữ.",
-        "en": "Inviting design, IT, and language students to record elder oral histories, photograph historic pattern cards, and lead bilingual visitor tours."
-      },
-      "registrations": [],
-      "formUrl": "https://forms.gle/qHcVSwDAMj9dXDKH6"
-    },
-    {
       "_id": "evt-4",
       "title": {
         "vi": "Hành trình Dạo bước Làng Lụa & Thực hành Nhuộm Thảo mộc Cánh kiến",
@@ -1068,7 +1005,7 @@ export function createInitialSeedSnapshot(): LocalDatabaseSnapshot {
         "en": "Vạn Phúc Village Gate — Nhuệ River Botanical Dye Yard"
       },
       "capacity": 25,
-      "registeredCount": 11,
+      "registeredCount": 0,
       "description": {
         "vi": "Tham quan đình cổ, giếng ngọc, xưởng dệt gia truyền 4 đời và trải nghiệm pha màu nhuộm tự nhiên từ cánh kiến, củ nâu trên khăn lụa tơ tằm.",
         "en": "Guided heritage walk past the communal house and 4-generation loom courtyards, concluding with a natural sticklac silk-scarf dyeing session."

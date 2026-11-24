@@ -555,7 +555,7 @@ export function HomePage() {
             </Link>
           </div>
 
-          <div className="mt-8 grid grid-cols-1 gap-6 md:grid-cols-2">
+          <div className={`mt-8 grid grid-cols-1 ${upcomingEvents.length === 1 ? 'max-w-2xl mx-auto' : 'md:grid-cols-2'} gap-6`}>
             {upcomingEvents.map((evt) => {
               const remaining = Math.max(0, evt.capacity - evt.registeredCount);
               const titleVi = evt.title?.vi || '';
@@ -572,8 +572,8 @@ export function HomePage() {
                         <Calendar className="h-4 w-4 text-[#E11D48]" />
                         <span>{evt.startDate.slice(0, 10)}</span>
                       </div>
-                      <span className="rounded-full bg-emerald-50 px-3 py-0.5 text-[11px] font-bold text-emerald-800 border border-emerald-200">
-                        {lang === 'vi' ? `Còn ${remaining} chỗ` : `${remaining} slots left`}
+                      <span className="rounded-full bg-emerald-50 px-3 py-0.5 text-[11px] font-bold text-emerald-800 border border-emerald-200 font-mono">
+                        {evt.registeredCount}/{evt.capacity} ({lang === 'vi' ? `Còn ${remaining} chỗ` : `${remaining} slots left`})
                       </span>
                     </div>
 
